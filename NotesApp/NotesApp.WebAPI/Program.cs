@@ -76,9 +76,12 @@ builder.Services.AddAuthentication(options =>
     cfg.SaveToken = true;
     cfg.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = authenticationSettings.JwtIssuer,
-        ValidAudience = authenticationSettings.JwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = authenticationSettings.Issuer,
+        ValidAudience = authenticationSettings.Audience,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.Secret))
     };
 });
 
@@ -99,6 +102,7 @@ builder.Configuration.GetSection("EmailConfiguration").Bind(emailConfiguration);
 builder.Services.AddSingleton(emailConfiguration);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ITokensHandler,TokensHandler>();
 
 //Add CORS
 var origins = builder.Configuration["AllowedOrigins"];

@@ -20,21 +20,21 @@ namespace NotesApp.WebAPI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
         {
-            await _usersService.AddUser(dto);
+            await _usersService.Register(dto);
             return Ok();
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
         {
-            await _usersService.AddUser(dto);
+            await _usersService.Register(dto);
             return Ok();
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            string token = await _usersService.GenerateJwt(dto);
+            string token = await _usersService.Login(dto);
             return Ok(token);
         }
 
